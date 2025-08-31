@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask CI/CD Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .status { padding: 20px; background: #f5f5f5; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Flask CI/CD Demo Application</h1>
+        <p>This application is deployed using Jenkins CI/CD pipeline on Azure VM</p>
+        
+        <div class="status">
+            <h2>Application Status</h2>
+            <p>Check the <a href="/api/status">status API</a> for current application status.</p>
+        </div>
+        
+        <h2>Features</h2>
+        <ul>
+            <li>Automated testing with pytest</li>
+            <li>CI/CD pipeline with Jenkins</li>
+            <li>Deployment to Azure VM</li>
+            <li>Production-ready with Gunicorn</li>
+            <li>NGINX reverse proxy</li>
+        </ul>
+    </div>
+</body>
+</html>
