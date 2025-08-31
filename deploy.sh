@@ -8,10 +8,10 @@ LOG_DIR="/var/log/flask-app"
 PID_FILE="$APP_DIR/gunicorn.pid"
 PORT="8000"
 
-mkdir -p $APP_DIR
-mkdir -p $LOG_DIR
-chown -R azureuser:azureuser $APP_DIR
-chown -R azureuser:azureuser $LOG_DIR
+sudo mkdir -p $APP_DIR
+sudo mkdir -p $LOG_DIR
+sudo chown -R azureuser:azureuser $APP_DIR
+sudo chown -R azureuser:azureuser $LOG_DIR
 
 cd $APP_DIR
 
