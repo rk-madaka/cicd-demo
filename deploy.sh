@@ -28,52 +28,9 @@ source $VENV_DIR/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-# Create systemd service file
-echo "Configuring systemd service..."
-sudo tee /etc/systemd/system/flask-app.service > /dev/null <<EOF
-[Unit]
-Description=Gunicorn instance to serve Flask app
-After=network.target
+# Run with Gunicorn
+venv/bin/gunicorn --bind 0.0.0.0:8000 wsgi:app
 
-[Service]
-User=azureuser
-Group=www-data
-WorkingDirectory=$APP_DIR
-Environment="PATH=$VENV_DIR/bin"
-ExecStart=$VENV_DIR/bin/gunicorn --workers 3 --bind unix:$APP_DIR/flask-app.sock -m 007 wsgi:app
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Create nginx configuration
-echo "Configuring nginx..."
-sudo tee /etc/nginx/sites-available/flask-app > /dev/null <<EOF
-server {
-    listen 80;
-    server_name _;
-
-    location / {
-        include proxy_params;
-        proxy_pass http://unix:$APP_DIR/flask-app.sock;
-    }
-}
-EOF
-
-# Enable site if not already enabled
-if [ ! -f "/etc/nginx/sites-enabled/flask-app" ]; then
-    sudo ln -s /etc/nginx/sites-available/flask-app /etc/nginx/sites-enabled/
-fi
-
-# Test nginx configuration
-sudo nginx -t
-
-# Restart services
-echo "Restarting services..."
-sudo systemctl daemon-reload
-sudo systemctl restart flask-app
-sudo systemctl enable flask-app
-sudo systemctl restart nginx
-
+# Press Ctrl+C to stop
 echo "Deployment completed successfully!"
-echo "Application should be available at http://$(curl -s ifconfig.me)"
+echo "Application should be available at http://$(curl -s ifconfig.me):8000"
