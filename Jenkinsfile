@@ -2,9 +2,10 @@ pipeline {
     agent any
     
     environment {
-        VM_IP = '172.188.114.181'        // Replace with your VM IP
+        VM_IP = '172.188.114.181'
         VM_USER = 'azureuser'
         DEPLOY_PATH = '/opt/flask-app'
+        EMAIL_TO = 'rannjithkumar31@gmail.com'
     }
     
     stages {
@@ -34,20 +35,6 @@ pipeline {
                     }
                 }
             }
-            post {
-                success {
-                    echo 'All tests passed!'
-                    slackSend channel: '#dev-notifications', 
-                              color: 'good', 
-                              message: "Tests PASSED: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                }
-                failure {
-                    echo 'Tests failed!'
-                    slackSend channel: '#dev-notifications', 
-                              color: 'danger', 
-                              message: "Tests FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-                }
-            }
         }
         
         stage('Deploy to Azure VM') {
@@ -58,7 +45,6 @@ pipeline {
                 script {
                     echo "Deploying to Azure VM at ${env.VM_IP}"
                     
-                    // Transfer files to VM (you'll need to set up SSH keys first)
                     sh """
                         rsync -avz -e "ssh -o StrictHostKeyChecking=no" \
                         --exclude='venv' \
@@ -66,13 +52,33 @@ pipeline {
                         ./ ${env.VM_USER}@${env.VM_IP}:${env.DEPLOY_PATH}/
                     """
                     
-                    // Execute deployment script on remote VM
                     sh """
                         ssh -o StrictHostKeyChecking=no ${env.VM_USER}@${env.VM_IP} \
                         'cd ${env.DEPLOY_PATH} && chmod +x deploy.sh && ./deploy.sh'
                     """
                 }
             }
+        }
+    }
+    
+    post {
+        always {
+            echo "Pipeline finished: ${currentBuild.result}"
+        }
+        success {
+            mail to: env.EMAIL_TO,
+                 subject: "SUCCESS: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Build completed successfully.\n\nView details: ${env.BUILD_URL}"
+        }
+        failure {
+            mail to: env.EMAIL_TO,
+                 subject: "FAILED: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Build failed. Please check Jenkins for details.\n\nView logs: ${env.BUILD_URL}"
+        }
+        unstable {
+            mail to: env.EMAIL_TO,
+                 subject: "UNSTABLE: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 body: "Build is unstable. Some tests may have failed.\n\nView details: ${env.BUILD_URL}"
         }
     }
 }
