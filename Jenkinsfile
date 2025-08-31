@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        VM_IP = '172.188.83.61'        // Replace with your VM IP
+        VM_IP = '10.0.0.4'        // Replace with your VM IP
         VM_USER = 'azureuser'
         DEPLOY_PATH = '/opt/flask-app'
     }
