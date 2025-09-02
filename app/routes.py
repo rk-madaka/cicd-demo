@@ -10,7 +10,7 @@ def index():
 @bp.route('/api/status')
 def status():
     return jsonify({
-        'status': 'OK',
+        'status': 'OK1',
         'timestamp': datetime.datetime.utcnow().isoformat(),
         'version': '1.0.0'
     })
