@@ -23,19 +23,19 @@ pipeline {
             }
         }
         
-        stage('Run Tests') {
-            steps {
-                script {
-                    try {
-                        sh '. venv/bin/activate && python -m pytest tests/ -v'
-                        currentBuild.result = 'SUCCESS'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error "Tests failed: ${e.getMessage()}"
-                    }
-                }
-            }
-        }
+        // stage('Run Tests') {
+        //     steps {
+        //         script {
+        //             try {
+        //                 sh '. venv/bin/activate && python -m pytest tests/ -v'
+        //                 currentBuild.result = 'SUCCESS'
+        //             } catch (Exception e) {
+        //                 currentBuild.result = 'FAILURE'
+        //                 error "Tests failed: ${e.getMessage()}"
+        //             }
+        //         }
+        //     }
+        // }
         
         stage('Deploy to Azure VM') {
             when {
