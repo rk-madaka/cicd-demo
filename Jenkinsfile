@@ -38,9 +38,9 @@ pipeline {
         // }
         
         stage('Deploy to Azure VM') {
-            when {
-                expression { currentBuild.result == 'SUCCESS' }
-            }
+            // when {
+            //     expression { currentBuild.result == 'SUCCESS' }
+            // }
             steps {
                 script {
                     echo "Deploying to Azure VM at ${env.VM_IP}"
