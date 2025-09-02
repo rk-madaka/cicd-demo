@@ -61,24 +61,24 @@ pipeline {
         }
     }
     
-    post {
-        always {
-            echo "Pipeline finished: ${currentBuild.result}"
-        }
-        success {
-            mail to: env.EMAIL_TO,
-                 subject: "SUCCESS: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "Build completed successfully.\n\nView details: ${env.BUILD_URL}"
-        }
-        failure {
-            mail to: env.EMAIL_TO,
-                 subject: "FAILED: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "Build failed. Please check Jenkins for details.\n\nView logs: ${env.BUILD_URL}"
-        }
-        unstable {
-            mail to: env.EMAIL_TO,
-                 subject: "UNSTABLE: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "Build is unstable. Some tests may have failed.\n\nView details: ${env.BUILD_URL}"
-        }
-    }
+    // post {
+    //     always {
+    //         echo "Pipeline finished: ${currentBuild.result}"
+    //     }
+    //     success {
+    //         mail to: env.EMAIL_TO,
+    //              subject: "SUCCESS: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+    //              body: "Build completed successfully.\n\nView details: ${env.BUILD_URL}"
+    //     }
+    //     failure {
+    //         mail to: env.EMAIL_TO,
+    //              subject: "FAILED: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+    //              body: "Build failed. Please check Jenkins for details.\n\nView logs: ${env.BUILD_URL}"
+    //     }
+    //     unstable {
+    //         mail to: env.EMAIL_TO,
+    //              subject: "UNSTABLE: Pipeline ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+    //              body: "Build is unstable. Some tests may have failed.\n\nView details: ${env.BUILD_URL}"
+    //     }
+    // }
 }
